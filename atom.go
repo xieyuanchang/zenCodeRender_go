@@ -67,13 +67,17 @@ func (me atom) String() string {
 	return ret
 }
 
-func newAtom(reader *token_reader) atom {
+func newAtom(t token) *atom {
 	a := atom{}
-	t := reader.read()
 	if t.T != ATOM {
 		panic(t.Value + "is not a ATOM")
 	}
 	a.self = t
 	a.children = make([]*atom, 0, 10)
-	return a
+	return &a
 }
+
+//func newAtom(reader *token_reader) atom {
+//	t := reader.read()
+//	return makeAtom(t)
+//}

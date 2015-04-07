@@ -35,6 +35,7 @@ func (me *token_reader) read() token {
 	if error != nil {
 		return token{NULL, ""}
 	}
+
 	switch {
 	case b >= 'A' && b <= 'z':
 		ret = append(ret, b)
@@ -61,6 +62,8 @@ func (me *token_reader) read() token {
 		return token{ATOM, string(ret)}
 	case b == '+' || b == '>' || b == '(' || b == ')':
 		return token{SPLIT, string(b)}
+	default:
+		panic("there is unexpected char [" + string(b) + "]")
 	}
 
 	return token{NULL, ""}

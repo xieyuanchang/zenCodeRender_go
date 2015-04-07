@@ -112,3 +112,39 @@ func Test_expression11(t *testing.T) {
 		t.Fatal(a)
 	}
 }
+
+func Test_expression12(t *testing.T) {
+	test := "(div)"
+	reader := token_reader{strings.NewReader(test)}
+	a := expression(&reader)
+	if a.String() != `<div></div>` {
+		t.Fatal(a)
+	}
+}
+
+func Test_expression13(t *testing.T) {
+	test := "(div+ul)>li"
+	reader := token_reader{strings.NewReader(test)}
+	a := expression(&reader)
+	if a.String() != `<div><li></li></div><ul></ul>` {
+		t.Fatal(a)
+	}
+}
+
+func Test_expression14(t *testing.T) {
+	test := "div+ul>li+p"
+	reader := token_reader{strings.NewReader(test)}
+	a := expression(&reader)
+	if a.String() != `<div></div><ul><li></li><p></p></ul>` {
+		t.Fatal(a)
+	}
+}
+
+func Test_expression15(t *testing.T) {
+	test := "div+(ul>li)+p"
+	reader := token_reader{strings.NewReader(test)}
+	a := expression(&reader)
+	if a.String() != `<div></div><ul><li></li></ul><p></p>` {
+		t.Fatal(a)
+	}
+}

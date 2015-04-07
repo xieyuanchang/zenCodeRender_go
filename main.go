@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-
 	if len(os.Args) > 1 { // 通过参数方式输入待处理字符串
 		for _, str := range os.Args[1:] {
 			fmt.Println(Expression(str))
