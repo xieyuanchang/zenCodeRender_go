@@ -1,16 +1,14 @@
 // zenCodeRender project main.go
 package main
 
-import (
-	"regexp"
-	"strconv"
-	"strings"
-)
-
 type atom struct {
 	self     token
 	children []*atom
 	next     *atom
+	tag      string
+	id       string
+	class    string
+	num      int
 }
 
 func (me *atom) addChild(a *atom) {
@@ -19,43 +17,16 @@ func (me *atom) addChild(a *atom) {
 
 // to HTML
 func (me atom) String() string {
-	reg, _ := regexp.Compile("^[A-z]+\\d*")
-	tag := reg.FindString(me.self.Value)
-	n := 1
-	var err error
-
-	// deal #
-	id := ""
-	if strings.Contains(me.self.Value, "#") {
-		arr := strings.Split(me.self.Value, "#")
-		id = " id=\"" + reg.FindString(arr[1]) + "\""
-	}
-
-	// deal .
-	class := ""
-	if strings.Contains(me.self.Value, ".") {
-		arr := strings.Split(me.self.Value, ".")
-		class = " class=\"" + reg.FindString(arr[1]) + "\""
-	}
-
-	ret := "<" + tag + id + class + ">"
-
+	ret := "<" + me.tag + me.id + me.class + ">"
 	// deal >
 	for _, child := range me.children {
 		ret = ret + child.String()
 	}
-	ret = ret + "</" + tag + ">"
+	ret = ret + "</" + me.tag + ">"
 
-	// deal *num
-	if strings.Contains(me.self.Value, "*") {
-		arr := strings.Split(me.self.Value, "*")
-		n, err = strconv.Atoi(arr[1])
-		if err != nil {
-			panic(err)
-		}
-	}
+	// deal *
 	tmp := ret
-	for i := 1; i < n; i++ {
+	for i := 1; i < me.num; i++ {
 		ret = ret + tmp
 	}
 
@@ -63,21 +34,5 @@ func (me atom) String() string {
 	if me.next != nil {
 		ret = ret + me.next.String()
 	}
-
 	return ret
 }
-
-func newAtom(t token) *atom {
-	a := atom{}
-	if t.T != ATOM {
-		panic(t.Value + "is not a ATOM")
-	}
-	a.self = t
-	a.children = make([]*atom, 0, 10)
-	return &a
-}
-
-//func newAtom(reader *token_reader) atom {
-//	t := reader.read()
-//	return makeAtom(t)
-//}

@@ -21,7 +21,8 @@ func expression(reader *token_reader) *atom {
 			panic("after [" + cur.self.Value + `] ) is expected ,but It is [` + tk.Value + "]")
 		}
 	} else {
-		cur = newAtom(tk)
+
+		cur = new(atomMaker).newAtom(tk)
 	}
 
 	ret := cur
